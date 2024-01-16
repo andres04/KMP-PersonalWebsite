@@ -5,15 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
-
-
-@Immutable
-data class ColorFamily(
-    val color: Color,
-    val onColor: Color,
-    val colorContainer: Color,
-    val onColorContainer: Color
-)
+import com.materialkolor.dynamicColorScheme
 
 @Composable
 fun AppTheme(
@@ -21,21 +13,22 @@ fun AppTheme(
     type: Int = 0,
     content: @Composable() () -> Unit
 ) {
-  val colorScheme = when {
-      darkTheme && type == 0 -> Color0.darkScheme
-      darkTheme && type == 1 -> Color1.darkScheme
-      darkTheme && type == 2 -> Color2.darkScheme
-      darkTheme && type == 3 -> Color3.darkScheme
-      !darkTheme && type == 0 -> Color0.lightScheme
-      !darkTheme  && type == 1 -> Color1.lightScheme
-      !darkTheme  && type == 2 -> Color2.lightScheme
-      !darkTheme  && type == 3 -> Color3.lightScheme
-      else -> Color0.lightScheme
-  }
-  MaterialTheme(
-    colorScheme = colorScheme,
-    typography = androidx.compose.material3.Typography(),
-    content = content
-  )
+
+    val colorScheme = dynamicColorScheme(
+        when(type){
+            0 -> Color(0xFF39608F)
+            1 -> Color(0xFFCDEDA3)
+            2 -> Color(0xFF8F4C38)
+            3 -> Color(0xFF6D5E0F)
+            else -> Color(0xFF6D5E0F)
+        },
+        darkTheme
+    )
+
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = androidx.compose.material3.Typography(),
+        content = content
+    )
 }
 

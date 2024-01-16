@@ -49,6 +49,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -56,6 +57,7 @@ kotlin {
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
             implementation(projects.shared)
+            implementation("com.materialkolor:material-kolor:1.4.0-alpha01")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
