@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,12 +36,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ui.screens.HomeScreen
+import ui.screens.MoreAboutMe
 import ui.screens.SkillItem
 import ui.screens.SkillsScreen
 import ui.screens.WorkExperienceScreen
 import ui.theme.AppTheme
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun App() {
     var selected by remember { mutableStateOf<ToolbarItem>(ToolbarItem.Home) }
@@ -57,6 +61,8 @@ fun App() {
         2 -> ToolbarItem.WorkExperience
         else -> ToolbarItem.Education
     }
+
+    val windowSizeClass = calculateWindowSizeClass()
 
     AppTheme(
         darkTheme = isDarkColor,
@@ -83,6 +89,26 @@ fun App() {
                     }
                 )
 
+//                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()){
+//                    Column {
+//                        Text(
+//                            windowSizeClass.widthSizeClass.toString(),
+//                            style = MaterialTheme.typography.displayLarge,
+//                            fontWeight = FontWeight.Bold,
+//                            color = MaterialTheme.colorScheme.primary,
+//                        )
+//                        Text(
+//                            windowSizeClass.heightSizeClass.toString(),
+//                            style = MaterialTheme.typography.displayLarge,
+//                            fontWeight = FontWeight.Bold,
+//                            color = MaterialTheme.colorScheme.primary,
+//                        )
+//                    }
+//
+//                }
+
+
+
                 LazyColumn(modifier = Modifier.background(bgColor), state = listState){
                     item {
                         HomeScreen(height)
@@ -94,9 +120,7 @@ fun App() {
                         WorkExperienceScreen()
                     }
                     item {
-                        Box(modifier = Modifier.fillMaxWidth().height(height.dp)){
-
-                        }
+                        MoreAboutMe(height)
                     }
                 }
             }

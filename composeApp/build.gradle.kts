@@ -40,7 +40,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         val desktopMain by getting
         
@@ -58,6 +58,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(projects.shared)
             implementation("com.materialkolor:material-kolor:1.4.0-alpha01")
+            implementation("dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0-alpha03")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

@@ -1,12 +1,19 @@
 package ui.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,10 +33,57 @@ fun WorkExperienceScreen() {
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
             )
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(64.dp))
 
-            workExperienceList.forEach {
-                WorkExperienceItem(it)
+            workExperienceList.forEachIndexed {i, it ->
+
+
+                Row(Modifier.height(IntrinsicSize.Min)){
+                    Box(modifier = Modifier.padding(start = 64.dp, end = 64.dp).fillMaxHeight().width(64.dp), contentAlignment = Alignment.TopCenter) {
+                        Box (
+                            contentAlignment= Alignment.Center,
+                            modifier = Modifier
+                                .size(64.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape = CircleShape
+                                ),
+                        ){}
+                        if(workExperienceList.size-1 != i){
+                            Box(contentAlignment= Alignment.TopCenter,
+                                modifier = Modifier
+                                    .padding(
+                                        top = when(i){
+                                            0 -> 32.dp
+                                            else -> 0.dp
+                                        },
+                                        bottom = when(i){
+                                            workExperienceList.size-1 -> 32.dp
+                                            else -> 0.dp
+                                        },
+                                    )
+                                    .fillMaxHeight()
+                                    .width(16.dp)
+                                    .background(
+                                        color = MaterialTheme.colorScheme.primary
+                                    ),
+                            ){}
+                        } else {
+                            Box(contentAlignment= Alignment.TopCenter,
+                                modifier = Modifier
+                                    .width(16.dp).height(16.dp)
+                                    .background(
+                                        color = MaterialTheme.colorScheme.primary
+                                    ),
+                            ){}
+                        }
+                    }
+                    Column {
+                        WorkExperienceItem(it)
+                        Spacer(Modifier.height(64.dp))
+                    }
+
+                }
             }
         }
 
@@ -40,19 +94,18 @@ fun WorkExperienceScreen() {
 fun WorkExperienceItem(
     workExperience: WorkExperience
 ) {
-    Row {
-        Column {
-            Text(
-                workExperience.title,
-                style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(Modifier.height(16.dp))
-            Text(workExperience.description, style = MaterialTheme.typography.headlineSmall)
-            Text(workExperience.date, style = MaterialTheme.typography.headlineSmall)
-        }
+
+    Column {
+        Text(
+            workExperience.title,
+            style = MaterialTheme.typography.displaySmall,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.height(16.dp))
+        Text(workExperience.description, style = MaterialTheme.typography.headlineSmall)
+        Text(workExperience.date, style = MaterialTheme.typography.headlineSmall)
     }
-    Spacer(Modifier.height(64.dp))
+
 }
 
 data class WorkExperience(
@@ -119,7 +172,7 @@ val workExperienceList = listOf(
     ),
     WorkExperience(
         id = 0,
-        title = "San Marcos University",
+        title = "National University of San Marcos",
         description = "Quipucamayoc - Backend Developer",
         date = "2011-2012"
     ),
