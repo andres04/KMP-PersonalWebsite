@@ -15,6 +15,7 @@ kotlin {
         browser {
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
+
             }
         }
         binaries.executable()
@@ -54,6 +55,7 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
+            // https://mvnrepository.com/artifact/androidx.compose.material/material-icons-extended
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
             implementation(projects.shared)

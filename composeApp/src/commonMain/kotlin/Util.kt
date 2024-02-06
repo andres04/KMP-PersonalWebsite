@@ -73,7 +73,7 @@ fun SelectableTextField(text: String) {
     TextField(
         value = text,
         onValueChange = {},
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+       // keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         readOnly = true,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
