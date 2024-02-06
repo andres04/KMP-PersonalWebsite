@@ -1,26 +1,36 @@
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun ToolbarItem(item: ToolbarItem, selected: ToolbarItem, onSelected: (itemSelected: ToolbarItem)->Unit){
-    if(item == selected){
-        Button(
-            onClick = { onSelected(item) },
-            content = {
-                Text(item.name)
-            }
-        )
-    } else{
-        OutlinedButton(
-            onClick = { onSelected(item) },
-            content = {
-                Text(item.name)
-            }
-        )
+
+    val windowSizeClass = calculateWindowSizeClass()
+    if(windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact){
+        if(item == selected){
+            Button(
+                onClick = { onSelected(item) },
+                content = {
+                    Text(item.name)
+                }
+            )
+        } else{
+            OutlinedButton(
+                onClick = { onSelected(item) },
+                content = {
+                    Text(item.name)
+                }
+            )
+        }
     }
+
+
 
 }
 

@@ -5,12 +5,12 @@ import androidx.compose.ui.window.application
 
 fun main() = application {
     Window(onCloseRequest = ::exitApplication, title = "Andres") {
-        App()
+        App(kotlinx.browser.window.innerWidth, kotlinx.browser.window.innerHeight)
     }
 }
 
 @Preview
 @Composable
 fun AppDesktopPreview() {
-    App()
+    App(kotlinx.browser.window.innerWidth, kotlinx.browser.window.innerHeight)
 }
