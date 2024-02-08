@@ -34,11 +34,11 @@ fun ToolbarItem(item: ToolbarItem, selected: ToolbarItem, onSelected: (itemSelec
 
 }
 
-sealed class ToolbarItem(val name: String, val position: Int){
-    object Home : ToolbarItem(name = "Home", position = 0)
-    object Skills : ToolbarItem(name = "Skills", position = 1)
-    object WorkExperience : ToolbarItem(name = "Work Experience", position = 2)
-    object Education : ToolbarItem(name = "More About Me", position = 3)
+sealed class ToolbarItem(val name: String, val webPosition: Int, val mobilePosition: Int){
+    object Home : ToolbarItem(name = "Home", webPosition = 0, mobilePosition = 0)
+    object Skills : ToolbarItem(name = "Skills", webPosition = 1, mobilePosition = 1)
+    object WorkExperience : ToolbarItem(name = "Work Experience", webPosition = 2, mobilePosition = 2)
+    object Education : ToolbarItem(name = "More About Me", webPosition = 3, mobilePosition = 4)
 }
 
 

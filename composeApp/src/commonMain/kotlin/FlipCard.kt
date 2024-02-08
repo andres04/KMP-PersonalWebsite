@@ -109,7 +109,7 @@ fun MobileFlipCard(
     )
 
     Box(
-        Modifier.fillMaxSize(),
+        Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         Card(
@@ -124,7 +124,7 @@ fun MobileFlipCard(
         )
         {
             Column(
-                Modifier.fillMaxSize(),
+                Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -132,7 +132,7 @@ fun MobileFlipCard(
                 if (!rotated){
 
                 } else {
-                    Box(modifier = Modifier.fillMaxSize().graphicsLayer {
+                    Box(modifier = Modifier.fillMaxWidth().graphicsLayer {
                         alpha = if (rotated) animateBack else animateFront
                         rotationY = rotation
                     }) {

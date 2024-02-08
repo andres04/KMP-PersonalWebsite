@@ -28,19 +28,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ui.screens.desktop.Skill
 import ui.screens.desktop.skills
 
 @Composable
-fun MobileSkillsScreen(selected: ToolbarItem, onItemClick: (skill: Skill) -> Unit) {
+fun MobileSkillsScreen(height: Dp, selected: ToolbarItem, onItemClick: (skill: Skill) -> Unit) {
 
     var columns by rememberSaveable { mutableStateOf(2) }
     var rows by rememberSaveable { mutableStateOf(5) }
     var items by remember { mutableStateOf(skills) }
 
 
-    Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.fillMaxWidth().height(height).padding(16.dp), contentAlignment = Alignment.Center) {
         Column {
             Text(
                 "My Skills",

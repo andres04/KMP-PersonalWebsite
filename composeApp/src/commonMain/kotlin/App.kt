@@ -44,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
@@ -57,8 +58,10 @@ import ui.screens.desktop.SkillsScreen
 import ui.screens.desktop.WorkExperienceScreen
 import ui.screens.desktop.skills
 import ui.screens.mobile.MobileDetailSkillItem
+import ui.screens.mobile.MobileDummyScreen
 import ui.screens.mobile.MobileHomeScreen
-import ui.screens.mobile.MobileMoreAboutMeScreen
+import ui.screens.mobile.MobileMoreAboutMe1Screen
+import ui.screens.mobile.MobileMoreAboutMe2Screen
 import ui.screens.mobile.MobileSkillsScreen
 import ui.screens.mobile.MobileWorkExperience1Screen
 import ui.screens.mobile.MobileWorkExperience2Screen
@@ -69,7 +72,6 @@ import ui.theme.AppTheme
 fun App() {
     var selected by remember { mutableStateOf<ToolbarItem>(ToolbarItem.Home) }
     val darkColor = true//isSystemInDarkTheme() no funciona aún en wasm
-    println(darkColor)
     var isDarkColor by remember { mutableStateOf(darkColor) }
     val density = LocalDensity.current
     val height = LocalWindowInfo.current.containerSize.height*density.density
@@ -84,9 +86,13 @@ fun App() {
     var selectedSkill by remember { mutableStateOf(skills[0]) }
     var itemsSize = if(isMobile) 6 else 4
 
-    println(height.toString()+" "+listState.firstVisibleItemIndex)
+    // Create element height in dp state
+    var columnHeightDp by remember {
+        mutableStateOf(0.dp)
+    }
+
     selected =
-        if(isMobile){
+        if(!isMobile){
             when(listState.firstVisibleItemIndex){
                 0 -> ToolbarItem.Home
                 1 -> ToolbarItem.Skills
@@ -108,7 +114,7 @@ fun App() {
 
     AppTheme(
         darkTheme = isDarkColor,
-        type = selected.position
+        type = if(isMobile) selected.mobilePosition else selected.webPosition
     ) {
         Scaffold{paddingValues ->
 
@@ -203,7 +209,7 @@ fun App() {
                         selected = selected,
                         onSelected = {
                             coroutineScope.launch {
-                                listState.animateScrollToItem(it.position)
+                                listState.animateScrollToItem(if(isMobile)it.mobilePosition else it.webPosition)
                             }
                         },
                         isDarkColor = isDarkColor,
@@ -219,18 +225,27 @@ fun App() {
                         }
                     )
 
-                    Box(modifier = Modifier.fillMaxWidth().fillMaxHeight()){
-                        LazyColumn(modifier = Modifier.background(bgColor), state = listState){
+                    Box(modifier = Modifier.fillMaxWidth().fillMaxHeight().onGloballyPositioned { coordinates ->
+                        // Set column height using the LayoutCoordinates
+                        columnHeightDp = with(density) { coordinates.size.height.toDp() }
+                    }){
+                        LazyColumn(
+                            modifier = Modifier.background(bgColor),
+                            state = listState,
+                        ){
                             item {
                                 if(isMobile) {
-                                    MobileHomeScreen()
+                                    //MobileDummyScreen(columnHeightDp)
+                                    MobileHomeScreen(columnHeightDp)
                                 } else {
                                     HomeScreen(height)
                                 }
                             }
                             item {
                                 if(isMobile) {
+                                    //MobileDummyScreen(columnHeightDp)
                                     MobileSkillsScreen(
+                                        height = columnHeightDp,
                                         selected = selected,
                                         onItemClick = { skill ->
                                             selectedSkill = skill
@@ -244,25 +259,35 @@ fun App() {
                             }
                             item {
                                 if(isMobile) {
-                                    MobileWorkExperience1Screen()
+                                    //MobileDummyScreen(columnHeightDp)
+                                    MobileWorkExperience1Screen(columnHeightDp)
                                 } else {
                                     WorkExperienceScreen()
                                 }
                             }
                             if(isMobile) {
                                 item {
-                                    MobileWorkExperience2Screen()
+                                    //MobileDummyScreen(columnHeightDp)
+                                    MobileWorkExperience2Screen(columnHeightDp)
                                 }
                             }
                             item {
                                 if(isMobile){
-                                    MobileMoreAboutMeScreen()
+                                    //MobileDummyScreen(columnHeightDp)
+                                    MobileMoreAboutMe1Screen(columnHeightDp)
                                 } else {
                                     MoreAboutMeScreen(height)
                                 }
                             }
+                            if(isMobile) {
+                                item {
+                                    //MobileDummyScreen(columnHeightDp)
+                                    MobileMoreAboutMe2Screen(columnHeightDp)
+                                }
+                            }
                         }
                         Column(modifier = Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.End) {
+                            Text("position: " + listState.firstVisibleItemIndex+" itemsSize:"+itemsSize+" height:"+columnHeightDp)
                             if(listState.firstVisibleItemIndex != 0){
                                 FloatingActionButton(
                                     onClick = {
@@ -275,7 +300,7 @@ fun App() {
                                 }
                             }
                             Spacer(Modifier.height(8.dp))
-                            if(listState.firstVisibleItemIndex != itemsSize){
+                            if(listState.firstVisibleItemIndex != itemsSize-1){
                                 FloatingActionButton(
                                     onClick = {
                                         coroutineScope.launch {

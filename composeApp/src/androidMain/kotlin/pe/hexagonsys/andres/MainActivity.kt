@@ -12,7 +12,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App(kotlinx.browser.window.innerWidth, kotlinx.browser.window.innerHeight)
+            App()
         }
     }
 }
@@ -20,5 +20,5 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App(kotlinx.browser.window.innerWidth, kotlinx.browser.window.innerHeight)
+    App()
 }
