@@ -69,6 +69,7 @@ fun MobileWorkExperience1Screen(height: Dp) {
 
                     }
                     Column {
+                        MobileWorkExperienceItem(it)
                         Spacer(Modifier.height(16.dp))
                     }
 

@@ -287,7 +287,7 @@ fun App() {
                             }
                         }
                         Column(modifier = Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.End) {
-                            Text("position: " + listState.firstVisibleItemIndex+" itemsSize:"+itemsSize+" height:"+columnHeightDp)
+                            //Text("position: " + listState.firstVisibleItemIndex+" itemsSize:"+itemsSize+" height:"+columnHeightDp)
                             if(listState.firstVisibleItemIndex != 0){
                                 FloatingActionButton(
                                     onClick = {
