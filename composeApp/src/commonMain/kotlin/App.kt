@@ -235,7 +235,6 @@ fun App() {
                         ){
                             item {
                                 if(isMobile) {
-                                    //MobileDummyScreen(columnHeightDp)
                                     MobileHomeScreen(columnHeightDp)
                                 } else {
                                     HomeScreen(height)
@@ -243,7 +242,6 @@ fun App() {
                             }
                             item {
                                 if(isMobile) {
-                                    //MobileDummyScreen(columnHeightDp)
                                     MobileSkillsScreen(
                                         height = columnHeightDp,
                                         selected = selected,
@@ -259,7 +257,6 @@ fun App() {
                             }
                             item {
                                 if(isMobile) {
-                                    //MobileDummyScreen(columnHeightDp)
                                     MobileWorkExperience1Screen(columnHeightDp)
                                 } else {
                                     WorkExperienceScreen()
@@ -267,13 +264,11 @@ fun App() {
                             }
                             if(isMobile) {
                                 item {
-                                    //MobileDummyScreen(columnHeightDp)
                                     MobileWorkExperience2Screen(columnHeightDp)
                                 }
                             }
                             item {
                                 if(isMobile){
-                                    //MobileDummyScreen(columnHeightDp)
                                     MobileMoreAboutMe1Screen(columnHeightDp)
                                 } else {
                                     MoreAboutMeScreen(height)
@@ -281,7 +276,6 @@ fun App() {
                             }
                             if(isMobile) {
                                 item {
-                                    //MobileDummyScreen(columnHeightDp)
                                     MobileMoreAboutMe2Screen(columnHeightDp)
                                 }
                             }
