@@ -18,11 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MoreAboutMeScreen(height: Float){
-    Box(modifier = Modifier.fillMaxWidth().height(height.dp), contentAlignment = Alignment.Center){
+fun MoreAboutMeScreen(height: Dp){
+    Box(modifier = Modifier.fillMaxWidth().height(height), contentAlignment = Alignment.Center){
         Column {
             Text(
                 "More About Me",

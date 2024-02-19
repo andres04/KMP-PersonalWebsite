@@ -21,17 +21,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SkillsScreen(height: Float, selected: ToolbarItem) {
+fun SkillsScreen(height: Dp, selected: ToolbarItem) {
 
     var columns by rememberSaveable { mutableStateOf(3) }
     var rows by rememberSaveable { mutableStateOf(3) }
     var items by remember { mutableStateOf(skills) }
 
 
-    Box(modifier = Modifier.fillMaxWidth().height(height.dp), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.fillMaxWidth().height(height), contentAlignment = Alignment.Center) {
         Column {
             Text(
                 "My Skills",

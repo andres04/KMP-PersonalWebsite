@@ -19,11 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun WorkExperienceScreen() {
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+fun WorkExperienceScreen(height: Dp) {
+    Box(modifier = Modifier.fillMaxWidth().height(height.times(2)), contentAlignment = Alignment.Center) {
         Column(Modifier.width(1500.dp)) {
             Spacer(Modifier.height(64.dp))
             Text(

@@ -2,6 +2,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,18 +36,17 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.CoroutineScope
@@ -58,7 +58,6 @@ import ui.screens.desktop.SkillsScreen
 import ui.screens.desktop.WorkExperienceScreen
 import ui.screens.desktop.skills
 import ui.screens.mobile.MobileDetailSkillItem
-import ui.screens.mobile.MobileDummyScreen
 import ui.screens.mobile.MobileHomeScreen
 import ui.screens.mobile.MobileMoreAboutMe1Screen
 import ui.screens.mobile.MobileMoreAboutMe2Screen
@@ -67,15 +66,14 @@ import ui.screens.mobile.MobileWorkExperience1Screen
 import ui.screens.mobile.MobileWorkExperience2Screen
 import ui.theme.AppTheme
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun App() {
     var selected by remember { mutableStateOf<ToolbarItem>(ToolbarItem.Home) }
-    val darkColor = true//isSystemInDarkTheme() no funciona aún en wasm
+    val darkColor = isSystemInDarkTheme() //no funciona aún en wasm
     var isDarkColor by remember { mutableStateOf(darkColor) }
     val density = LocalDensity.current
-    val height = LocalWindowInfo.current.containerSize.height*density.density
-    val listState = rememberLazyListState()
+    val listState = rememberLazyListState(initialFirstVisibleItemIndex = 0)
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
@@ -126,81 +124,7 @@ fun App() {
             ModalNavigationDrawer(
                 drawerState = drawerState,
                 drawerContent = {
-                    ModalDrawerSheet {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(16.dp)
-                        ){
-                            Text("My Webpage", modifier = Modifier.padding(16.dp))
-                        }
-                        Divider(modifier = Modifier.padding(start = 16.dp, end = 16.dp))
-                        NavigationDrawerItem(
-                            label = { Text(text = "Home") },
-                            selected = false,
-                            onClick = {
-                                moveToScreenFromNavigator(
-                                    coroutineScope = coroutineScope,
-                                    drawerState = drawerState,
-                                    listState = listState,
-                                    index = 0
-                                )
-                            },
-                            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-                        )
-                        NavigationDrawerItem(
-                            label = { Text(text = "Skills") },
-                            selected = false,
-                            onClick = {
-                                moveToScreenFromNavigator(
-                                    coroutineScope = coroutineScope,
-                                    drawerState = drawerState,
-                                    listState = listState,
-                                    index = 1
-                                )
-                            },
-                            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-                        )
-                        NavigationDrawerItem(
-                            label = { Text(text = "Work Experience") },
-                            selected = false,
-                            onClick = {
-                                moveToScreenFromNavigator(
-                                    coroutineScope = coroutineScope,
-                                    drawerState = drawerState,
-                                    listState = listState,
-                                    index = 2
-                                )
-                            },
-                            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-                        )
-                        NavigationDrawerItem(
-                            label = { Text(text = "More About Me") },
-                            selected = false,
-                            onClick = {
-                                if(isMobile){
-                                    moveToScreenFromNavigator(
-                                        coroutineScope = coroutineScope,
-                                        drawerState = drawerState,
-                                        listState = listState,
-                                        index = 4
-                                    )
-                                    coroutineScope.launch {
-                                        delay(500)
-                                        listState.animateScrollToItem(listState.firstVisibleItemIndex+1)
-                                    }
-                                } else {
-                                    moveToScreenFromNavigator(
-                                        coroutineScope = coroutineScope,
-                                        drawerState = drawerState,
-                                        listState = listState,
-                                        index = 3
-                                    )
-                                }
-
-                            },
-                            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-                        )
-                    }
+                    NavigationDrawerSheet(coroutineScope, drawerState, listState, isMobile)
                 }
             ) {
                 // Screen content
@@ -225,10 +149,13 @@ fun App() {
                         }
                     )
 
-                    Box(modifier = Modifier.fillMaxWidth().fillMaxHeight().onGloballyPositioned { coordinates ->
-                        // Set column height using the LayoutCoordinates
-                        columnHeightDp = with(density) { coordinates.size.height.toDp() }
-                    }){
+                    Box(modifier = Modifier.fillMaxWidth()
+                        .fillMaxHeight()
+                        .onGloballyPositioned { coordinates ->
+                            // Set column height using the LayoutCoordinates
+                            columnHeightDp = with(density) { coordinates.size.height.toDp() }
+                        }
+                    ){
                         LazyColumn(
                             modifier = Modifier.background(bgColor),
                             state = listState,
@@ -237,7 +164,7 @@ fun App() {
                                 if(isMobile) {
                                     MobileHomeScreen(columnHeightDp)
                                 } else {
-                                    HomeScreen(height)
+                                    HomeScreen(columnHeightDp)
                                 }
                             }
                             item {
@@ -251,7 +178,7 @@ fun App() {
                                         }
                                     )
                                 } else {
-                                    SkillsScreen(height, selected)
+                                    SkillsScreen(columnHeightDp, selected)
                                 }
 
                             }
@@ -259,7 +186,7 @@ fun App() {
                                 if(isMobile) {
                                     MobileWorkExperience1Screen(columnHeightDp)
                                 } else {
-                                    WorkExperienceScreen()
+                                    WorkExperienceScreen(columnHeightDp)
                                 }
                             }
                             if(isMobile) {
@@ -271,7 +198,7 @@ fun App() {
                                 if(isMobile){
                                     MobileMoreAboutMe1Screen(columnHeightDp)
                                 } else {
-                                    MoreAboutMeScreen(height)
+                                    MoreAboutMeScreen(columnHeightDp)
                                 }
                             }
                             if(isMobile) {
@@ -281,7 +208,7 @@ fun App() {
                             }
                         }
                         Column(modifier = Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.End) {
-                            //Text("position: " + listState.firstVisibleItemIndex+" itemsSize:"+itemsSize+" height:"+columnHeightDp)
+                            //Text("selected: "+ selected.webPosition +", liststate: "+listState.firstVisibleItemIndex)
                             if(listState.firstVisibleItemIndex != 0){
                                 FloatingActionButton(
                                     onClick = {
@@ -320,6 +247,86 @@ fun App() {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun NavigationDrawerSheet(
+    coroutineScope: CoroutineScope,
+    drawerState: DrawerState,
+    listState: LazyListState,
+    isMobile: Boolean
+) {
+    ModalDrawerSheet {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text("My Webpage", modifier = Modifier.padding(16.dp))
+        }
+        Divider(modifier = Modifier.padding(start = 16.dp, end = 16.dp))
+        NavigationDrawerItem(
+            label = { Text(text = "Home") },
+            selected = false,
+            onClick = {
+                moveToScreenFromNavigator(
+                    coroutineScope = coroutineScope,
+                    drawerState = drawerState,
+                    listState = listState,
+                    index = 0
+                )
+            },
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+        )
+        NavigationDrawerItem(
+            label = { Text(text = "Skills") },
+            selected = false,
+            onClick = {
+                moveToScreenFromNavigator(
+                    coroutineScope = coroutineScope,
+                    drawerState = drawerState,
+                    listState = listState,
+                    index = 1
+                )
+            },
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+        )
+        NavigationDrawerItem(
+            label = { Text(text = "Work Experience") },
+            selected = false,
+            onClick = {
+                moveToScreenFromNavigator(
+                    coroutineScope = coroutineScope,
+                    drawerState = drawerState,
+                    listState = listState,
+                    index = 2
+                )
+            },
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+        )
+        NavigationDrawerItem(
+            label = { Text(text = "More About Me") },
+            selected = false,
+            onClick = {
+                if (isMobile) {
+                    moveToScreenFromNavigator(
+                        coroutineScope = coroutineScope,
+                        drawerState = drawerState,
+                        listState = listState,
+                        index = 4
+                    )
+                } else {
+                    moveToScreenFromNavigator(
+                        coroutineScope = coroutineScope,
+                        drawerState = drawerState,
+                        listState = listState,
+                        index = 3
+                    )
+                }
+
+            },
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+        )
     }
 }
 
